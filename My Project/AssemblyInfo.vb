@@ -1,4 +1,6 @@
-﻿Imports System
+﻿Imports System.Resources
+
+Imports System
 Imports System.Reflection
 Imports System.Runtime.InteropServices
 
@@ -8,14 +10,14 @@ Imports System.Runtime.InteropServices
 
 ' Review the values of the assembly attributes
 
-<Assembly: AssemblyTitle("Media")> 
-<Assembly: AssemblyDescription("")> 
-<Assembly: AssemblyCompany("Microsoft")> 
-<Assembly: AssemblyProduct("Media")> 
+<Assembly: AssemblyTitle("Media File Organise")> 
+<Assembly: AssemblyDescription("To organize the Photos datewise")> 
+<Assembly: AssemblyCompany("Manimoole")> 
+<Assembly: AssemblyProduct("MediaManager")> 
 <Assembly: AssemblyCopyright("Copyright © Microsoft 2016")> 
-<Assembly: AssemblyTrademark("")> 
+<Assembly: AssemblyTrademark("Manimoole")> 
 
-<Assembly: ComVisible(False)>
+<Assembly: ComVisible(False)> 
 
 'The following GUID is for the ID of the typelib if this project is exposed to COM
 <Assembly: Guid("e40fcc23-c1f2-45bd-a812-9e2ddeb8ddbc")> 
@@ -31,5 +33,7 @@ Imports System.Runtime.InteropServices
 ' by using the '*' as shown below:
 ' <Assembly: AssemblyVersion("1.0.*")> 
 
-<Assembly: AssemblyVersion("1.0.0.0")> 
-<Assembly: AssemblyFileVersion("1.0.0.0")> 
+<Assembly: AssemblyVersion("0.0.0.1")> 
+<Assembly: AssemblyFileVersion("0.0.0.1")> 
+
+<Assembly: NeutralResourcesLanguageAttribute("en")> 
