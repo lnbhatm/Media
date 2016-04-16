@@ -1,5 +1,7 @@
 ﻿Imports System
 Imports System.IO
+Imports System.Security
+Imports System.Security.Cryptography
 
 Public Class frmmain
 
@@ -26,7 +28,7 @@ Public Class frmmain
     End Sub
 
     Private Sub frmmain_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        pgbar.Minimum = 1
+        pgbar.Minimum = 0
     End Sub
 
     Public Function FileExists(ByVal Fname As String) As Boolean
@@ -52,6 +54,38 @@ Public Class frmmain
 ErrorHandler:
         Resume Next
     End Sub
+
+
+    Function hash_SHA256_generate(ByVal file_name As String)
+        Dim hash
+        Dim hashValue() As Byte
+        hash = SHA256.Create()
+        Dim fileStream As FileStream = File.OpenRead(file_name)
+        fileStream.Position = 0
+        hashValue = hash.ComputeHash(fileStream)
+        Dim hash_hex = PrintByteArray(hashValue)
+        fileStream.Close()
+        Return hash_hex
+    End Function
+    Public Function PrintByteArray(ByVal array() As Byte)
+        Dim hex_value As String = ""
+        Dim i As Integer
+        For i = 0 To array.Length - 1
+            hex_value += array(i).ToString("X2")
+        Next i
+        Return hex_value.ToUpper
+    End Function
+
+    Public Function hashcomparefiles(ByVal oFile As String, ByVal nFile As String) As Boolean
+        Dim hashOFile As String = hash_SHA256_generate(oFile)
+        Dim hashnFile As String = hash_SHA256_generate(nFile)
+        If StrComp(hashOFile, hashnFile, CompareMethod.Binary) Then
+            hashcomparefiles = False
+        Else
+            hashcomparefiles = True
+        End If
+    End Function
+
 
     Public Function arrangephotos(ByVal fileName As String) As Integer
         Dim ext As String
@@ -97,7 +131,15 @@ ErrorHandler:
         Try
             My.Computer.FileSystem.CreateDirectory(strdstdir)
             strNewFileName = My.Computer.FileSystem.CombinePath(strdstdir, strNewFileName & ext)
-            My.Computer.FileSystem.CopyFile(fileName, strNewFileName, overwrite:=False)
+            If FileExists(strNewFileName) Then
+                If hashcomparefiles(strNewFileName, fileName) = False Then
+                    Dim tmpfilename As String
+                    tmpfilename = Path.GetFileNameWithoutExtension(strNewFileName)
+                    tmpfilename = tmpfilename & "_P" & Format(Now, "hhmmss")
+                    strNewFileName = My.Computer.FileSystem.CombinePath(strdstdir, tmpfilename & ext)
+                End If
+            End If
+            My.Computer.FileSystem.MoveFile(fileName, strNewFileName, overwrite:=False)
             File.SetLastWriteTime(strNewFileName, picturetaken)
             File.SetCreationTime(strNewFileName, picturetaken)
             File.SetLastAccessTime(strNewFileName, picturetaken)
@@ -122,12 +164,16 @@ ErrorHandler:
             txtdst.Focus()
             Exit Sub
         End If
+        My.Computer.FileSystem.CreateDirectory(destdir & "\sourcebkup")
         Dim fileNames = My.Computer.FileSystem.GetFiles(sourcedir, FileIO.SearchOption.SearchTopLevelOnly, "*.jpeg", "*.jpg", "*.bmp")
         filecount = fileNames.Count
         If filecount = 0 Then
             MsgBox("No Media files in the directory: " & sourcedir)
             Exit Sub
         End If
+        For Each file As String In fileNames
+            My.Computer.FileSystem.CopyFile(file, destdir & "\sourcebkup\" & Path.GetFileName(file), overwrite:=False)
+        Next
         makephotosdir(destdir)
         pgbar.Maximum = filecount
         For Each file As String In fileNames
@@ -143,7 +189,7 @@ ErrorHandler:
     Private Sub btnreset_Click(sender As Object, e As EventArgs) Handles btnreset.Click
         txtsrc.Text = ""
         txtdst.Text = ""
-        pgbar.Minimum = 1
+        pgbar.Minimum = 0
         pgbar.Value = 0
         lblprgs.Text = "0%"
         btnorg.Enabled = True
