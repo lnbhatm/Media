@@ -113,18 +113,18 @@ ErrorHandler:
             strYear = Format(picturetaken, "yyyy")
             strMonth = Format(picturetaken, "MM")
             strDay = Format(picturetaken, "dd_MMMM_yyyy")
-            strNewFileName = Format(picturetaken, "ddMMyyyy_hmmsstt_") & Trim(EquipmentModel)
+            strNewFileName = Format(picturetaken, "yyyyMMdd_hhmmsstt") & Trim(EquipmentModel)
         Else
             If strTimeCreated > strTimeModified Then
                 strYear = Format(infoReader.LastWriteTime, "yyyy")
                 strMonth = Format(infoReader.LastWriteTime, "MM")
                 strDay = Format(infoReader.LastWriteTime, "dd_MMMM_yyyy")
-                strNewFileName = Format(infoReader.LastWriteTime, "ddMMyyyy_hmmsstt")
+                strNewFileName = Format(infoReader.LastWriteTime, "yyyyMMdd_hhmmsstt")
             Else
                 strYear = Format(infoReader.CreationTime, "yyyy")
                 strMonth = Format(infoReader.CreationTime, "MM")
                 strDay = Format(infoReader.CreationTime, "dd_MMMM_yyyy")
-                strNewFileName = Format(infoReader.CreationTime, "ddMMyyyy_hmmsstt")
+                strNewFileName = Format(infoReader.CreationTime, "yyyyMMdd_hhmmsstt")
             End If
         End If
         strdstdir = pDir & "\" & strYear & "\" & strMonth & "\" & strDay
@@ -135,7 +135,7 @@ ErrorHandler:
                 If hashcomparefiles(strNewFileName, fileName) = False Then
                     Dim tmpfilename As String
                     tmpfilename = Path.GetFileNameWithoutExtension(strNewFileName)
-                    tmpfilename = tmpfilename & "_P" & Format(Now, "hhmmss")
+                    tmpfilename = tmpfilename & "_" & Format(Now, "mmss")
                     strNewFileName = My.Computer.FileSystem.CombinePath(strdstdir, tmpfilename & ext)
                 End If
             End If
