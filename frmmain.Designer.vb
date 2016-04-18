@@ -41,7 +41,7 @@ Partial Class frmmain
         Me.btnexit.BackColor = System.Drawing.Color.Transparent
         Me.btnexit.Font = New System.Drawing.Font("Cambria", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.btnexit.ForeColor = System.Drawing.Color.Green
-        Me.btnexit.Location = New System.Drawing.Point(832, 399)
+        Me.btnexit.Location = New System.Drawing.Point(496, 465)
         Me.btnexit.Name = "btnexit"
         Me.btnexit.Size = New System.Drawing.Size(80, 30)
         Me.btnexit.TabIndex = 0
@@ -88,7 +88,7 @@ Partial Class frmmain
         Me.btnorg.BackColor = System.Drawing.Color.Transparent
         Me.btnorg.Font = New System.Drawing.Font("Cambria", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.btnorg.ForeColor = System.Drawing.Color.Green
-        Me.btnorg.Location = New System.Drawing.Point(751, 399)
+        Me.btnorg.Location = New System.Drawing.Point(415, 465)
         Me.btnorg.Name = "btnorg"
         Me.btnorg.Size = New System.Drawing.Size(80, 30)
         Me.btnorg.TabIndex = 5
@@ -100,7 +100,7 @@ Partial Class frmmain
         Me.pgbar.BackColor = System.Drawing.Color.White
         Me.pgbar.Cursor = System.Windows.Forms.Cursors.Default
         Me.pgbar.ForeColor = System.Drawing.Color.White
-        Me.pgbar.Location = New System.Drawing.Point(583, 372)
+        Me.pgbar.Location = New System.Drawing.Point(247, 438)
         Me.pgbar.Name = "pgbar"
         Me.pgbar.Size = New System.Drawing.Size(279, 22)
         Me.pgbar.TabIndex = 6
@@ -112,7 +112,7 @@ Partial Class frmmain
         Me.lblprgs.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.lblprgs.Font = New System.Drawing.Font("Calibri", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.lblprgs.ForeColor = System.Drawing.Color.FromArgb(CType(CType(0, Byte), Integer), CType(CType(0, Byte), Integer), CType(CType(64, Byte), Integer))
-        Me.lblprgs.Location = New System.Drawing.Point(868, 372)
+        Me.lblprgs.Location = New System.Drawing.Point(532, 438)
         Me.lblprgs.Name = "lblprgs"
         Me.lblprgs.Size = New System.Drawing.Size(40, 22)
         Me.lblprgs.TabIndex = 7
@@ -135,7 +135,7 @@ Partial Class frmmain
         Me.btnreset.BackColor = System.Drawing.Color.Transparent
         Me.btnreset.Font = New System.Drawing.Font("Cambria", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.btnreset.ForeColor = System.Drawing.Color.Green
-        Me.btnreset.Location = New System.Drawing.Point(669, 399)
+        Me.btnreset.Location = New System.Drawing.Point(333, 465)
         Me.btnreset.Name = "btnreset"
         Me.btnreset.Size = New System.Drawing.Size(80, 30)
         Me.btnreset.TabIndex = 9
@@ -154,7 +154,7 @@ Partial Class frmmain
         Me.txtlog.Name = "txtlog"
         Me.txtlog.ReadOnly = True
         Me.txtlog.ScrollBars = System.Windows.Forms.ScrollBars.Both
-        Me.txtlog.Size = New System.Drawing.Size(465, 358)
+        Me.txtlog.Size = New System.Drawing.Size(697, 487)
         Me.txtlog.TabIndex = 11
         '
         'btn
@@ -162,7 +162,7 @@ Partial Class frmmain
         Me.btn.BackColor = System.Drawing.Color.Transparent
         Me.btn.Font = New System.Drawing.Font("Cambria", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.btn.ForeColor = System.Drawing.Color.Green
-        Me.btn.Location = New System.Drawing.Point(584, 399)
+        Me.btn.Location = New System.Drawing.Point(248, 465)
         Me.btn.Name = "btn"
         Me.btn.Size = New System.Drawing.Size(80, 30)
         Me.btn.TabIndex = 12
@@ -175,7 +175,7 @@ Partial Class frmmain
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackgroundImage = Global.Media.My.Resources.Resources.DSCN1281
         Me.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None
-        Me.ClientSize = New System.Drawing.Size(1046, 434)
+        Me.ClientSize = New System.Drawing.Size(1273, 496)
         Me.Controls.Add(Me.btn)
         Me.Controls.Add(Me.txtlog)
         Me.Controls.Add(Me.btnreset)

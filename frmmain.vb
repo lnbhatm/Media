@@ -24,10 +24,13 @@ Public Class frmmain
     End Sub
 
     Private Sub frmmain_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        Me.Text = Me.Text & vbTab & " Version [R " & My.Application.Info.Version.Major
+        Me.Text = Me.Text & "." & My.Application.Info.Version.Minor
+        Me.Text = Me.Text & "." & My.Application.Info.Version.Build
+        Me.Text = Me.Text & "." & My.Application.Info.Version.Revision & "]"
         pgbar.Minimum = 0
         txtdst.Text = "C:\Manimoole\GirishBhatM"
-        txtsrc.Text = "C:\Manimoole\GirishBhatM\testdir"
-        txtlog.Text = "--------------- Program started at " & Format(Now, " yyy-MM-dd hh-mm-ss: ") & " ---------------"
+        txtlog.Text = "--------------- Program started at " & Format(Now, "[ yyy-MM-dd hh-mm-ss: ]") & " ---------------"
     End Sub
 
     Public Function FileExists(ByVal Fname As String) As Boolean
@@ -183,6 +186,7 @@ Public Class frmmain
 
     Private Sub btn_Click(sender As Object, e As EventArgs) Handles btn.Click
         txtlog.Text = ""
+        lblprgs.Text = "0%"
     End Sub
 
     Private Sub btnorg_Click(sender As Object, e As EventArgs) Handles btnorg.Click
