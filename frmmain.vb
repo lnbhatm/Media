@@ -4,11 +4,6 @@ Imports System.Security
 Imports System.Security.Cryptography
 
 Public Class frmmain
-
-    Public pDir As String = "\Media\Photos"
-    Public vDir As String = "\Media\Videos"
-    Public dDir As String = "\Media\Docs"
-
     Protected Overrides ReadOnly Property CreateParams() As CreateParams
         Get
             Dim param As CreateParams = MyBase.CreateParams
@@ -20,6 +15,7 @@ Public Class frmmain
     Private Sub btnexit_Click(sender As Object, e As EventArgs) Handles btnexit.Click
         If MsgBox("Are You Sure you want to Exit ?", vbYesNo, "Exit") = vbYes Then
             If (System.Windows.Forms.Application.MessageLoop) Then
+                logmessage("Application exited")
                 System.Windows.Forms.Application.Exit()
             Else
                 System.Environment.Exit(1)
@@ -29,6 +25,9 @@ Public Class frmmain
 
     Private Sub frmmain_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         pgbar.Minimum = 0
+        txtdst.Text = "C:\Manimoole\GirishBhatM"
+        txtsrc.Text = "C:\Manimoole\GirishBhatM\testdir"
+        txtlog.Text = "--------------- Program started at " & Format(Now, " yyy-MM-dd hh-mm-ss: ") & " ---------------"
     End Sub
 
     Public Function FileExists(ByVal Fname As String) As Boolean
@@ -39,23 +38,99 @@ Public Class frmmain
         End If
     End Function
 
-    Public Function DirectoryExists(ByVal dirname As String) As Boolean
-        If My.Computer.FileSystem.DirectoryExists(dirname) Then
-            DirectoryExists = True
+    Public Function HandleDuplicates(ByVal srcfile As String, ByVal dstfile As String) As String
+        Dim strfilename As String = dstfile
+        Dim strext As String = Path.GetExtension(dstfile)
+        Dim strdstdir As String = Path.GetDirectoryName(dstfile)
+        Dim strfilenamenoext As String = Path.GetFileNameWithoutExtension(dstfile)
+        If FileExists(dstfile) = True Then
+            If hashcomparefiles(srcfile, dstfile) = True Then
+                logmessage("Files: " & vbCrLf & srcfile & " And " & vbCrLf & dstfile & vbCrLf & " Are same ")
+                strfilename = String.Empty
+            Else
+                strfilenamenoext = strfilenamenoext & "_" & Format(Now, "mmss")
+                strfilename = My.Computer.FileSystem.CombinePath(strdstdir, strfilenamenoext & strext)
+                logmessage("Files: " & vbCrLf & srcfile & " And " & vbCrLf & dstfile & vbCrLf & " Are Not the Same ")
+            End If
+        End If
+        Return (strfilename)
+    End Function
+
+    Public Function filecreationtime2filename(ByVal dstdir As String, ByVal strorgname As String, ByVal type As String) As String
+        Dim strnewname As String = Nothing
+        Dim infoReader As System.IO.FileInfo = My.Computer.FileSystem.GetFileInfo(strorgname)
+        Dim Ext As String = System.IO.Path.GetExtension(strorgname)
+        Dim strcreatedtime As Date = infoReader.LastWriteTime
+        Dim picturetaken As Date = Nothing
+        Dim EquipmentModel As String = Nothing
+        Dim strYear As String = Nothing
+        Dim strMonth As String = Nothing
+        Dim strDay As String = Nothing
+        Dim mediadir As String = "\testoutput\Media\" & type
+        '------------------------------------------------------------------------------------------
+        If type = "Photos" Then
+            Using EW As New ExifWorks(strorgname)
+                picturetaken = EW.DateTimeOriginal
+                EquipmentModel = EW.EquipmentModel
+            End Using
+        End If
+        '------------------------------------------------------------------------------------------
+        If picturetaken <> Nothing Then
+            strYear = Format(picturetaken, "yyyy")
+            strMonth = Format(picturetaken, "MM")
+            strDay = Format(picturetaken, "dd_MMMM_yyyy")
+            strnewname = Trim(Format(picturetaken, "yyyyMMdd_hhmmsstt") & Trim(EquipmentModel))
         Else
-            DirectoryExists = False
+            strYear = Format(infoReader.LastWriteTime, "yyyy")
+            strMonth = Format(infoReader.LastWriteTime, "MM")
+            strDay = Format(infoReader.LastWriteTime, "dd_MMMM_yyyy")
+            strnewname = Trim(Format(strcreatedtime, "yyyyMMdd_hhmmsstt") & Trim(EquipmentModel))
+        End If
+        '------------------------------------------------------------------------------------------
+        mediadir = dstdir & mediadir & "\" & strYear & "\" & strMonth & "\" & strDay
+        Try
+            My.Computer.FileSystem.CreateDirectory(mediadir)
+            strnewname = My.Computer.FileSystem.CombinePath(mediadir, strnewname & Ext)
+        Catch ex As Exception
+        End Try
+        Return (strnewname)
+    End Function
+
+    Public Function updateproperty(ByVal dstfile As String) As Integer
+        Dim strnewname As String = Nothing
+        Dim infoReader As System.IO.FileInfo = My.Computer.FileSystem.GetFileInfo(dstfile)
+        Dim strcreatedtime As Date = infoReader.LastWriteTime
+        Dim picturetaken As Date = Nothing
+        Dim EquipmentModel As String = Nothing
+        '------------------------------------------------------------------------------------------
+        Using EW As New ExifWorks(dstfile)
+            picturetaken = EW.DateTimeOriginal
+            EquipmentModel = EW.EquipmentModel
+        End Using
+        '------------------------------------------------------------------------------------------
+        If picturetaken <> Nothing Then
+            File.SetCreationTime(dstfile, picturetaken)
+            File.SetLastAccessTime(dstfile, picturetaken)
+        Else
+            File.SetCreationTime(dstfile, picturetaken)
+            File.SetLastAccessTime(dstfile, picturetaken)
+        End If
+        '------------------------------------------------------------------------------------------
+        Return (0)
+    End Function
+
+    Public Function logmessage(ByVal msg As String) As Integer
+        txtlog.Text = txtlog.Text & vbCrLf & Format(Now, "[yyy-MM-dd hh-mm-ss]") & ":  " & msg & vbCrLf
+        Return 0
+    End Function
+
+    Public Function isDirectoryExists(ByVal dirname As String) As Boolean
+        If My.Computer.FileSystem.DirectoryExists(dirname) Then
+            isDirectoryExists = True
+        Else
+            isDirectoryExists = False
         End If
     End Function
-    Public Sub makephotosdir(ByVal dirname As String)
-        pDir = dirname & pDir
-        On Error GoTo ErrorHandler
-        My.Computer.FileSystem.CreateDirectory(pDir)
-        Exit Sub
-ErrorHandler:
-        Resume Next
-    End Sub
-
-
     Function hash_SHA256_generate(ByVal file_name As String)
         Dim hash
         Dim hashValue() As Byte
@@ -75,7 +150,6 @@ ErrorHandler:
         Next i
         Return hex_value.ToUpper
     End Function
-
     Public Function hashcomparefiles(ByVal oFile As String, ByVal nFile As String) As Boolean
         Dim hashOFile As String = hash_SHA256_generate(oFile)
         Dim hashnFile As String = hash_SHA256_generate(nFile)
@@ -86,112 +160,128 @@ ErrorHandler:
         End If
     End Function
 
-
-    Public Function arrangephotos(ByVal fileName As String) As Integer
-        Dim ext As String
-        Dim infoReader As System.IO.FileInfo
-        Dim strTimeCreated As Date
-        Dim strTimeModified As Date
-        Dim strYear As String
-        Dim strMonth As String
-        Dim strDay As String
-        Dim strNewFileName As String
-        Dim strdstdir As String
-        Dim picturetaken As Date = Nothing
-        Dim EquipmentModel As String
-        '--------------------------------------------------------------------------
-        ext = System.IO.Path.GetExtension(fileName)
-        infoReader = My.Computer.FileSystem.GetFileInfo(fileName)
-        strTimeCreated = infoReader.CreationTime
-        strTimeModified = infoReader.LastWriteTime
-        '--------------------------------------------------------------------------
-        Using EW As New ExifWorks(fileName)
-            picturetaken = EW.DateTimeOriginal
-            EquipmentModel = EW.EquipmentModel
-        End Using
-        If picturetaken <> Nothing Then
-            strYear = Format(picturetaken, "yyyy")
-            strMonth = Format(picturetaken, "MM")
-            strDay = Format(picturetaken, "dd_MMMM_yyyy")
-            strNewFileName = Format(picturetaken, "yyyyMMdd_hhmmsstt") & Trim(EquipmentModel)
-        Else
-            If strTimeCreated > strTimeModified Then
-                strYear = Format(infoReader.LastWriteTime, "yyyy")
-                strMonth = Format(infoReader.LastWriteTime, "MM")
-                strDay = Format(infoReader.LastWriteTime, "dd_MMMM_yyyy")
-                strNewFileName = Format(infoReader.LastWriteTime, "yyyyMMdd_hhmmsstt")
-            Else
-                strYear = Format(infoReader.CreationTime, "yyyy")
-                strMonth = Format(infoReader.CreationTime, "MM")
-                strDay = Format(infoReader.CreationTime, "dd_MMMM_yyyy")
-                strNewFileName = Format(infoReader.CreationTime, "yyyyMMdd_hhmmsstt")
-            End If
+    Public Function backupmediafiles(ByVal dstdir As String, ByVal dstsubdir As String, ByVal sourcefile As String) As Integer
+        Dim bkup As String = dstdir & "\bkup\" & dstsubdir & "\"
+        Dim bkupfile As String = bkup & Path.GetFileName(sourcefile)
+        If My.Computer.FileSystem.DirectoryExists(bkup) = False Then
+            My.Computer.FileSystem.CreateDirectory(bkup)
         End If
-        strdstdir = pDir & "\" & strYear & "\" & strMonth & "\" & strDay
-        Try
-            My.Computer.FileSystem.CreateDirectory(strdstdir)
-            strNewFileName = My.Computer.FileSystem.CombinePath(strdstdir, strNewFileName & ext)
-            If FileExists(strNewFileName) Then
-                If hashcomparefiles(strNewFileName, fileName) = False Then
-                    Dim tmpfilename As String
-                    tmpfilename = Path.GetFileNameWithoutExtension(strNewFileName)
-                    tmpfilename = tmpfilename & "_" & Format(Now, "mmss")
-                    strNewFileName = My.Computer.FileSystem.CombinePath(strdstdir, tmpfilename & ext)
-                End If
-            End If
-            My.Computer.FileSystem.MoveFile(fileName, strNewFileName, overwrite:=False)
-            File.SetLastWriteTime(strNewFileName, picturetaken)
-            File.SetCreationTime(strNewFileName, picturetaken)
-            File.SetLastAccessTime(strNewFileName, picturetaken)
-        Catch ex As Exception
-        End Try
-        '--------------------------------------------------------------------------
-        Return 0
+        bkupfile = HandleDuplicates(sourcefile, bkupfile)
+        If bkupfile IsNot String.Empty Then
+            My.Computer.FileSystem.CopyFile(sourcefile, bkupfile, overwrite:=False)
+            logmessage("Backup created: " & sourcefile)
+        End If
+        Return (0)
     End Function
-    Private Sub btnorg_Click(sender As Object, e As EventArgs) Handles btnorg.Click
-        Dim filecount As Integer = 0
-        Dim fileindex As Integer = 0
-        Dim percent As Integer = 0
-        Dim sourcedir As String = Trim(txtsrc.Text)
-        Dim destdir As String = Trim(txtdst.Text)
-        If sourcedir = "" Or DirectoryExists(sourcedir) = False Then
-            MsgBox("Directroy: " & sourcedir & "Does not exists!", vbCritical, "INPUT DIRECTORY ERROR")
-            txtsrc.Focus()
-            Exit Sub
-        End If
-        If destdir = "" Or DirectoryExists(destdir) = False Then
-            MsgBox("Directroy: " & destdir & "Does not exists!", vbCritical, "INPUT DIRECTORY ERROR")
-            txtdst.Focus()
-            Exit Sub
-        End If
-        My.Computer.FileSystem.CreateDirectory(destdir & "\sourcebkup")
-        Dim fileNames = My.Computer.FileSystem.GetFiles(sourcedir, FileIO.SearchOption.SearchTopLevelOnly, "*.jpeg", "*.jpg", "*.bmp")
-        filecount = fileNames.Count
-        If filecount = 0 Then
-            MsgBox("No Media files in the directory: " & sourcedir)
-            Exit Sub
-        End If
-        For Each file As String In fileNames
-            My.Computer.FileSystem.CopyFile(file, destdir & "\sourcebkup\" & Path.GetFileName(file), overwrite:=False)
-        Next
-        makephotosdir(destdir)
-        pgbar.Maximum = filecount
-        For Each file As String In fileNames
-            arrangephotos(file)
-            fileindex = fileindex + 1
-            pgbar.Value = fileindex
-            percent = (fileindex / filecount) * 100
-            lblprgs.Text = percent & " %"
-            MyBase.Update()
-        Next
-        btnorg.Enabled = False
-    End Sub
     Private Sub btnreset_Click(sender As Object, e As EventArgs) Handles btnreset.Click
         txtsrc.Text = ""
-        txtdst.Text = ""
         pgbar.Minimum = 0
         pgbar.Value = 0
         lblprgs.Text = "0%"
         btnorg.Enabled = True
+    End Sub
+
+    Private Sub btn_Click(sender As Object, e As EventArgs) Handles btn.Click
+        txtlog.Text = ""
+    End Sub
+
+    Private Sub btnorg_Click(sender As Object, e As EventArgs) Handles btnorg.Click
+        Dim sourcedir As String = Trim(txtsrc.Text)
+        Dim destdir As String = Trim(txtdst.Text)
+        Dim filecount As Integer = 0
+        Dim idx = 0
+        Dim outfilename As String
+        pgbar.Minimum = 0
+        If sourcedir = "" Or isDirectoryExists(sourcedir) = False Then
+            MsgBox(sourcedir & "Does not exists!", vbCritical, "INPUT DIRECTORY ERROR")
+            logmessage(sourcedir & "Does not exists!")
+            txtsrc.Focus()
+            Exit Sub
+        End If
+
+        If destdir = "" Or isDirectoryExists(destdir) = False Then
+            MsgBox(destdir & "Does not exists!", vbCritical, "INPUT DIRECTORY ERROR")
+            logmessage(destdir & "Does not exists!")
+            txtdst.Focus()
+            Exit Sub
+        End If
+        'backup photos files.
+        Dim strphotos = My.Computer.FileSystem.GetFiles(sourcedir, FileIO.SearchOption.SearchTopLevelOnly, "*.jpeg", "*.jpg", "*.bmp")
+        Dim strvideofiles = My.Computer.FileSystem.GetFiles(sourcedir, FileIO.SearchOption.SearchTopLevelOnly, "*.avi", "*.mov", "*.mp4", "*.3gp", "*.wmv")
+        'backup photos files.
+        filecount = strphotos.Count
+        idx = 0
+        If filecount <> 0 Then
+            pgbar.Maximum = filecount
+            logmessage("Image file backup started..")
+            For Each file As String In strphotos
+                backupmediafiles(destdir, "Photos", file)
+                idx = idx + 1
+                pgbar.Value = idx
+                lblprgs.Text = Int((idx / filecount) * 100) & " %"
+                MyBase.Update()
+            Next
+            logmessage("Image file backup completed..")
+        End If
+        '----------------------------------------------------------------------------------
+        'backup video files.
+        filecount = strvideofiles.Count
+        idx = 0
+        If filecount <> 0 Then
+            pgbar.Maximum = filecount
+            logmessage("Video file backup started..")
+            For Each file As String In strvideofiles
+                backupmediafiles(destdir, "Videos", file)
+                idx = idx + 1
+                pgbar.Value = idx
+                lblprgs.Text = Int((idx / filecount) * 100) & " %"
+                MyBase.Update()
+            Next
+            logmessage("Video file backup completed..")
+        End If
+        '----------------------------------------------------------------------------------
+        'arrange photos.
+        filecount = strphotos.Count
+        idx = 0
+        If filecount <> 0 Then
+            pgbar.Maximum = filecount
+            logmessage("Image file processing started..")
+            For Each file As String In strphotos
+                outfilename = filecreationtime2filename(destdir, file, "Photos")
+                outfilename = HandleDuplicates(file, outfilename)
+                If outfilename IsNot String.Empty Then
+                    My.Computer.FileSystem.MoveFile(file, outfilename, overwrite:=False)
+                    logmessage("Moved source: " & file)
+                End If
+                idx = idx + 1
+                pgbar.Value = idx
+                lblprgs.Text = Int((idx / filecount) * 100) & " %"
+                MyBase.Update()
+            Next
+            logmessage("Image file processing completed..")
+        End If
+        '----------------------------------------------------------------------------------
+        'arrange Videos.
+        filecount = strvideofiles.Count
+        idx = 0
+        If filecount <> 0 Then
+            pgbar.Maximum = filecount
+            logmessage("Video file Processing started..")
+            For Each file As String In strvideofiles
+                outfilename = filecreationtime2filename(destdir, file, "Videos")
+                outfilename = HandleDuplicates(file, outfilename)
+                If outfilename IsNot String.Empty Then
+                    My.Computer.FileSystem.MoveFile(file, outfilename, overwrite:=False)
+                    logmessage("Moved source: " & file)
+                End If
+                idx = idx + 1
+                pgbar.Value = idx
+                lblprgs.Text = Int((idx / filecount) * 100) & " %"
+                MyBase.Update()
+            Next
+            logmessage("Video file Processing completed..")
+        End If
+        '----------------------------------------------------------------------------------
+        logmessage("End of Arrangements..")
     End Sub
 End Class
