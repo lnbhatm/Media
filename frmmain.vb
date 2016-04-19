@@ -1,5 +1,6 @@
 ﻿Imports System
 Imports System.IO
+Imports System.IO.File
 Imports System.Security
 Imports System.Security.Cryptography
 
@@ -30,7 +31,6 @@ Public Class frmmain
         Me.Text = Me.Text & "." & My.Application.Info.Version.Revision & "]"
         pgbar.Minimum = 0
         txtdst.Text = "C:\Manimoole\GirishBhatM"
-        txtlog.Text = "--------------- Program started at " & Format(Now, "[ yyy-MM-dd hh-mm-ss: ]") & " ---------------"
     End Sub
 
     Public Function FileExists(ByVal Fname As String) As Boolean
@@ -48,12 +48,12 @@ Public Class frmmain
         Dim strfilenamenoext As String = Path.GetFileNameWithoutExtension(dstfile)
         If FileExists(dstfile) = True Then
             If hashcomparefiles(srcfile, dstfile) = True Then
-                logmessage("Files: " & vbCrLf & srcfile & " And " & vbCrLf & dstfile & vbCrLf & " Are same ")
                 strfilename = String.Empty
+                logmessage("DUP:[ " & srcfile & " And " & dstfile & " ]")
             Else
-                strfilenamenoext = strfilenamenoext & "_" & Format(Now, "mmss")
+                strfilenamenoext = strfilenamenoext & "_" & Format(Now, "mmssff")
                 strfilename = My.Computer.FileSystem.CombinePath(strdstdir, strfilenamenoext & strext)
-                logmessage("Files: " & vbCrLf & srcfile & " And " & vbCrLf & dstfile & vbCrLf & " Are Not the Same ")
+                logmessage("DIF:[ " & srcfile & " And " & dstfile & " ]")
             End If
         End If
         Return (strfilename)
@@ -123,7 +123,19 @@ Public Class frmmain
     End Function
 
     Public Function logmessage(ByVal msg As String) As Integer
-        txtlog.Text = txtlog.Text & vbCrLf & Format(Now, "[yyy-MM-dd hh-mm-ss]") & ":  " & msg & vbCrLf
+        Dim logdir As String = Application.StartupPath & "\log"
+        Dim logfile As String = logdir & "\media.log"
+        Dim sw As StreamWriter = Nothing
+        My.Computer.FileSystem.CreateDirectory(logdir)
+        If Not My.Computer.FileSystem.FileExists(logfile) Then
+            sw = AppendText(logfile)
+            sw.WriteLine("Media Log Created: " & Now())
+            sw.WriteLine("------------------------------------------------")
+        Else
+            sw = AppendText(logfile)
+            sw.WriteLine(Format(Now, "yyyy-MM-dd hh:mm:ss ") & " " & msg)
+        End If
+        sw.Close()
         Return 0
     End Function
 
@@ -172,7 +184,9 @@ Public Class frmmain
         bkupfile = HandleDuplicates(sourcefile, bkupfile)
         If bkupfile IsNot String.Empty Then
             My.Computer.FileSystem.CopyFile(sourcefile, bkupfile, overwrite:=False)
-            logmessage("Backup created: " & sourcefile)
+            logmessage("Backup: " & sourcefile)
+        Else
+            logmessage("File Exists in Backup: " & sourcefile)
         End If
         Return (0)
     End Function
@@ -185,7 +199,6 @@ Public Class frmmain
     End Sub
 
     Private Sub btn_Click(sender As Object, e As EventArgs) Handles btn.Click
-        txtlog.Text = ""
         lblprgs.Text = "0%"
     End Sub
 
@@ -196,17 +209,28 @@ Public Class frmmain
         Dim idx = 0
         Dim outfilename As String
         pgbar.Minimum = 0
-        If sourcedir = "" Or isDirectoryExists(sourcedir) = False Then
-            MsgBox(sourcedir & "Does not exists!", vbCritical, "INPUT DIRECTORY ERROR")
-            logmessage(sourcedir & "Does not exists!")
+        logmessage("Begining of Program")
+        If sourcedir = "" Then
+            MsgBox("Source Field is Empty!", vbCritical, "Empty Source String")
+            logmessage(sourcedir & "Source Text Field is Empty!")
+            txtsrc.Focus()
+            Exit Sub
+        End If
+        If isDirectoryExists(sourcedir) = False Then
+            MsgBox(sourcedir & "Does not exists!", vbCritical, "DIRECTROY NOT FOUND")
             txtsrc.Focus()
             Exit Sub
         End If
 
-        If destdir = "" Or isDirectoryExists(destdir) = False Then
-            MsgBox(destdir & "Does not exists!", vbCritical, "INPUT DIRECTORY ERROR")
-            logmessage(destdir & "Does not exists!")
-            txtdst.Focus()
+        If destdir = "" Then
+            MsgBox("Source Field is Empty!", vbCritical, "Empty Destination String")
+            logmessage(sourcedir & "Destination Text Field is Empty!")
+            txtsrc.Focus()
+            Exit Sub
+        End If
+        If isDirectoryExists(destdir) = False Then
+            MsgBox(destdir & "Does not exists!", vbCritical, "DIRECTROY NOT FOUND")
+            txtsrc.Focus()
             Exit Sub
         End If
         'backup photos files.
@@ -217,15 +241,20 @@ Public Class frmmain
         idx = 0
         If filecount <> 0 Then
             pgbar.Maximum = filecount
-            logmessage("Image file backup started..")
+            logmessage("Started Photos backup..")
+            logmessage("Total Photos found: " & filecount)
+            lbltype.Text = "Backup Photos.."
             For Each file As String In strphotos
+                logmessage("[" & idx & "/ " & filecount & "]")
                 backupmediafiles(destdir, "Photos", file)
                 idx = idx + 1
                 pgbar.Value = idx
                 lblprgs.Text = Int((idx / filecount) * 100) & " %"
+                Application.DoEvents()
                 MyBase.Update()
             Next
-            logmessage("Image file backup completed..")
+            lbltype.Text = "Done Photos backup"
+            logmessage("Completed Photos backup..")
         End If
         '----------------------------------------------------------------------------------
         'backup video files.
@@ -233,15 +262,20 @@ Public Class frmmain
         idx = 0
         If filecount <> 0 Then
             pgbar.Maximum = filecount
-            logmessage("Video file backup started..")
+            logmessage("Started Videos backup..")
+            lbltype.Text = "Backup Vodeos"
+            logmessage("Total Videos found: " & filecount)
             For Each file As String In strvideofiles
+                logmessage("[" & idx & "/ " & filecount & "]")
                 backupmediafiles(destdir, "Videos", file)
                 idx = idx + 1
                 pgbar.Value = idx
                 lblprgs.Text = Int((idx / filecount) * 100) & " %"
+                Application.DoEvents()
                 MyBase.Update()
             Next
-            logmessage("Video file backup completed..")
+            lbltype.Text = "Done Videos backup"
+            lbltype.Text = "Processing Vodeos done"
         End If
         '----------------------------------------------------------------------------------
         'arrange photos.
@@ -249,20 +283,24 @@ Public Class frmmain
         idx = 0
         If filecount <> 0 Then
             pgbar.Maximum = filecount
-            logmessage("Image file processing started..")
+            logmessage("Arrange Photos According to creation is started.")
+            lbltype.Text = "Arranging Photos"
             For Each file As String In strphotos
                 outfilename = filecreationtime2filename(destdir, file, "Photos")
                 outfilename = HandleDuplicates(file, outfilename)
                 If outfilename IsNot String.Empty Then
                     My.Computer.FileSystem.MoveFile(file, outfilename, overwrite:=False)
-                    logmessage("Moved source: " & file)
+                    logmessage("Moving:[ " & idx & "/ " & filecount & " ]" & file)
+                    logmessage("Destination: " & outfilename)
                 End If
                 idx = idx + 1
                 pgbar.Value = idx
                 lblprgs.Text = Int((idx / filecount) * 100) & " %"
+                Application.DoEvents()
                 MyBase.Update()
             Next
-            logmessage("Image file processing completed..")
+            lbltype.Text = "Arranging Photos Done"
+            logmessage("Arrange Photos According to creation is Completed.")
         End If
         '----------------------------------------------------------------------------------
         'arrange Videos.
@@ -270,22 +308,27 @@ Public Class frmmain
         idx = 0
         If filecount <> 0 Then
             pgbar.Maximum = filecount
-            logmessage("Video file Processing started..")
+            logmessage("Arrange Videos According to creation is started.")
+            lbltype.Text = "Arranging Videos"
             For Each file As String In strvideofiles
                 outfilename = filecreationtime2filename(destdir, file, "Videos")
                 outfilename = HandleDuplicates(file, outfilename)
                 If outfilename IsNot String.Empty Then
                     My.Computer.FileSystem.MoveFile(file, outfilename, overwrite:=False)
-                    logmessage("Moved source: " & file)
+                    logmessage("Moving:[ " & idx & "/ " & filecount & " ]" & file)
+                    logmessage("Destination: " & outfilename)
                 End If
                 idx = idx + 1
                 pgbar.Value = idx
                 lblprgs.Text = Int((idx / filecount) * 100) & " %"
+                Application.DoEvents()
                 MyBase.Update()
             Next
-            logmessage("Video file Processing completed..")
+            logmessage("Arrange Videos According to creation is Completed.")
+            lbltype.Text = "Arranging Videos done"
         End If
         '----------------------------------------------------------------------------------
-        logmessage("End of Arrangements..")
+        lbltype.Text = "Completed"
+        logmessage("Media files are arranged.")
     End Sub
 End Class

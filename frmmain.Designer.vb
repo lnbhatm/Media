@@ -32,8 +32,8 @@ Partial Class frmmain
         Me.lblprgs = New System.Windows.Forms.Label()
         Me.txtsrc = New System.Windows.Forms.TextBox()
         Me.btnreset = New System.Windows.Forms.Button()
-        Me.txtlog = New System.Windows.Forms.TextBox()
         Me.btn = New System.Windows.Forms.Button()
+        Me.lbltype = New System.Windows.Forms.Label()
         Me.SuspendLayout()
         '
         'btnexit
@@ -142,21 +142,6 @@ Partial Class frmmain
         Me.btnreset.Text = " &Reset"
         Me.btnreset.UseVisualStyleBackColor = False
         '
-        'txtlog
-        '
-        Me.txtlog.AllowDrop = True
-        Me.txtlog.BackColor = System.Drawing.Color.White
-        Me.txtlog.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-        Me.txtlog.Font = New System.Drawing.Font("Calibri", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtlog.ForeColor = System.Drawing.Color.FromArgb(CType(CType(0, Byte), Integer), CType(CType(0, Byte), Integer), CType(CType(192, Byte), Integer))
-        Me.txtlog.Location = New System.Drawing.Point(577, 8)
-        Me.txtlog.Multiline = True
-        Me.txtlog.Name = "txtlog"
-        Me.txtlog.ReadOnly = True
-        Me.txtlog.ScrollBars = System.Windows.Forms.ScrollBars.Both
-        Me.txtlog.Size = New System.Drawing.Size(697, 487)
-        Me.txtlog.TabIndex = 11
-        '
         'btn
         '
         Me.btn.BackColor = System.Drawing.Color.Transparent
@@ -169,15 +154,26 @@ Partial Class frmmain
         Me.btn.Text = "Clear"
         Me.btn.UseVisualStyleBackColor = False
         '
+        'lbltype
+        '
+        Me.lbltype.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
+        Me.lbltype.Font = New System.Drawing.Font("Calibri", 11.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lbltype.ForeColor = System.Drawing.Color.Green
+        Me.lbltype.Location = New System.Drawing.Point(24, 440)
+        Me.lbltype.Name = "lbltype"
+        Me.lbltype.Size = New System.Drawing.Size(207, 32)
+        Me.lbltype.TabIndex = 13
+        Me.lbltype.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        '
         'frmmain
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackgroundImage = Global.Media.My.Resources.Resources.DSCN1281
         Me.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None
-        Me.ClientSize = New System.Drawing.Size(1273, 496)
+        Me.ClientSize = New System.Drawing.Size(584, 496)
+        Me.Controls.Add(Me.lbltype)
         Me.Controls.Add(Me.btn)
-        Me.Controls.Add(Me.txtlog)
         Me.Controls.Add(Me.btnreset)
         Me.Controls.Add(Me.txtsrc)
         Me.Controls.Add(Me.lblprgs)
@@ -205,7 +201,7 @@ Partial Class frmmain
     Friend WithEvents lblprgs As System.Windows.Forms.Label
     Friend WithEvents txtsrc As System.Windows.Forms.TextBox
     Friend WithEvents btnreset As System.Windows.Forms.Button
-    Friend WithEvents txtlog As System.Windows.Forms.TextBox
     Friend WithEvents btn As System.Windows.Forms.Button
+    Friend WithEvents lbltype As System.Windows.Forms.Label
 
 End Class
