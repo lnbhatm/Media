@@ -69,7 +69,7 @@ Public Class frmmain
         Dim strYear As String = Nothing
         Dim strMonth As String = Nothing
         Dim strDay As String = Nothing
-        Dim mediadir As String = "\testoutput\Media\" & type
+        Dim mediadir As String = "\Media\" & type
         '------------------------------------------------------------------------------------------
         If type = "Photos" Then
             Using EW As New ExifWorks(strorgname)

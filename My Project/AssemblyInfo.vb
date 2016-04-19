@@ -10,8 +10,8 @@ Imports System.Runtime.InteropServices
 
 ' Review the values of the assembly attributes
 
-<Assembly: AssemblyTitle("Media File Organise")> 
-<Assembly: AssemblyDescription("To organize the Photos datewise")> 
+<Assembly: AssemblyTitle("Video and Photos Date Wise Organizer")> 
+<Assembly: AssemblyDescription("Program oraganises Video and Phtos.")> 
 <Assembly: AssemblyCompany("Manimoole")> 
 <Assembly: AssemblyProduct("MediaManager")> 
 <Assembly: AssemblyCopyright("Copyright © Microsoft 2016")> 
@@ -33,7 +33,7 @@ Imports System.Runtime.InteropServices
 ' by using the '*' as shown below:
 ' <Assembly: AssemblyVersion("1.0.*")> 
 
-<Assembly: AssemblyVersion("2.0.0.0")> 
-<Assembly: AssemblyFileVersion("2.0.0.0")> 
+<Assembly: AssemblyVersion("2.0.0.1")> 
+<Assembly: AssemblyFileVersion("2.0.0.1")> 
 
 <Assembly: NeutralResourcesLanguageAttribute("en")> 
