@@ -239,12 +239,12 @@ Public Class frmmain
             pgbar.Maximum = filecount
             logmessage("Started Photos backup..")
             logmessage("Total Photos found: " & filecount)
-            lbltype.Text = "Backup Photos.."
             For Each file As String In strphotos
-                logmessage("[" & idx & "/ " & filecount & "]")
                 backupmediafiles(destdir, "Photos", file)
                 idx = idx + 1
                 pgbar.Value = idx
+                logmessage("[" & idx & "/ " & filecount & "]")
+                lbltype.Text = "Backup [" & idx & "/ " & filecount & "] Photos"
                 lblprgs.Text = Int((idx / filecount) * 100) & " %"
                 Application.DoEvents()
                 MyBase.Update()
@@ -262,10 +262,11 @@ Public Class frmmain
             lbltype.Text = "Backup Vodeos"
             logmessage("Total Videos found: " & filecount)
             For Each file As String In strvideofiles
-                logmessage("[" & idx & "/ " & filecount & "]")
                 backupmediafiles(destdir, "Videos", file)
                 idx = idx + 1
                 pgbar.Value = idx
+                logmessage("[" & idx & "/ " & filecount & "]")
+                lbltype.Text = "Backup [" & idx & "/ " & filecount & "] Videos"
                 lblprgs.Text = Int((idx / filecount) * 100) & " %"
                 Application.DoEvents()
                 MyBase.Update()
@@ -284,12 +285,13 @@ Public Class frmmain
             For Each file As String In strphotos
                 outfilename = filecreationtime2filename(destdir, file, "Photos")
                 outfilename = HandleDuplicates(file, outfilename)
+                idx = idx + 1
                 If outfilename IsNot String.Empty Then
                     My.Computer.FileSystem.MoveFile(file, outfilename, overwrite:=False)
                     logmessage("Moving:[ " & idx & "/ " & filecount & " ]" & file)
                     logmessage("Destination: " & outfilename)
+                    lbltype.Text = "Arranging [" & idx & "/ " & filecount & "] Photos"
                 End If
-                idx = idx + 1
                 pgbar.Value = idx
                 lblprgs.Text = Int((idx / filecount) * 100) & " %"
                 Application.DoEvents()
@@ -313,6 +315,7 @@ Public Class frmmain
                     My.Computer.FileSystem.MoveFile(file, outfilename, overwrite:=False)
                     logmessage("Moving:[ " & idx & "/ " & filecount & " ]" & file)
                     logmessage("Destination: " & outfilename)
+                    lbltype.Text = "Arranging [" & idx & "/ " & filecount & "] Videos"
                 End If
                 idx = idx + 1
                 pgbar.Value = idx
