@@ -16,7 +16,8 @@ Public Class frmmain
     Private Sub btnexit_Click(sender As Object, e As EventArgs) Handles btnexit.Click
         If MsgBox("Are You Sure you want to Exit ?", vbYesNo, "Exit") = vbYes Then
             If (System.Windows.Forms.Application.MessageLoop) Then
-                logmessage("Application exited")
+                logmessage("Media Application Exited")
+                logmessage("----------------------------------------------------")
                 System.Windows.Forms.Application.Exit()
             Else
                 System.Environment.Exit(1)
@@ -25,12 +26,13 @@ Public Class frmmain
     End Sub
 
     Private Sub frmmain_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        Me.Text = Me.Text & vbTab & " Version [R " & My.Application.Info.Version.Major
-        Me.Text = Me.Text & "." & My.Application.Info.Version.Minor
-        Me.Text = Me.Text & "." & My.Application.Info.Version.Build
-        Me.Text = Me.Text & "." & My.Application.Info.Version.Revision & "]"
+        Dim appversion As String
+        Dim dot As String = "."
+        appversion = "[ R " & My.Application.Info.Version.Major & dot & My.Application.Info.Version.Minor & dot & My.Application.Info.Version.Build & dot & My.Application.Info.Version.Revision & "]"
         pgbar.Minimum = 0
         txtdst.Text = "C:\Manimoole\GirishBhatM"
+        logmessage("Media Application " & appversion & " Begin")
+        Me.Text = Me.Text & "       " & appversion
     End Sub
 
     Public Function FileExists(ByVal Fname As String) As Boolean
@@ -127,14 +129,8 @@ Public Class frmmain
         Dim logfile As String = logdir & "\media.log"
         Dim sw As StreamWriter = Nothing
         My.Computer.FileSystem.CreateDirectory(logdir)
-        If Not My.Computer.FileSystem.FileExists(logfile) Then
-            sw = AppendText(logfile)
-            sw.WriteLine("Media Log Created: " & Now())
-            sw.WriteLine("------------------------------------------------")
-        Else
-            sw = AppendText(logfile)
-            sw.WriteLine(Format(Now, "yyyy-MM-dd hh:mm:ss ") & " " & msg)
-        End If
+        sw = AppendText(logfile)
+        sw.WriteLine(Format(Now, "yyyy-MM-dd hh:mm:ss ") & " " & msg)
         sw.Close()
         Return 0
     End Function

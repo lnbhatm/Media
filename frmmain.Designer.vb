@@ -186,7 +186,7 @@ Partial Class frmmain
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.Name = "frmmain"
-        Me.Text = "MEDIA MANAGER"
+        Me.Text = "                                                                  MEDIA MANAGER"
         Me.TransparencyKey = System.Drawing.Color.FromArgb(CType(CType(224, Byte), Integer), CType(CType(224, Byte), Integer), CType(CType(224, Byte), Integer))
         Me.ResumeLayout(False)
         Me.PerformLayout()
