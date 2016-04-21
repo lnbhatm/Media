@@ -42,7 +42,7 @@ Partial Class frmmain
         Me.btnexit.BackColor = System.Drawing.Color.Maroon
         Me.btnexit.Font = New System.Drawing.Font("Cambria", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.btnexit.ForeColor = System.Drawing.Color.White
-        Me.btnexit.Location = New System.Drawing.Point(495, 432)
+        Me.btnexit.Location = New System.Drawing.Point(496, 437)
         Me.btnexit.Name = "btnexit"
         Me.btnexit.Size = New System.Drawing.Size(80, 33)
         Me.btnexit.TabIndex = 0
@@ -89,7 +89,7 @@ Partial Class frmmain
         Me.btnorg.BackColor = System.Drawing.Color.Maroon
         Me.btnorg.Font = New System.Drawing.Font("Cambria", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.btnorg.ForeColor = System.Drawing.Color.White
-        Me.btnorg.Location = New System.Drawing.Point(414, 432)
+        Me.btnorg.Location = New System.Drawing.Point(415, 437)
         Me.btnorg.Name = "btnorg"
         Me.btnorg.Size = New System.Drawing.Size(80, 33)
         Me.btnorg.TabIndex = 5
@@ -101,19 +101,19 @@ Partial Class frmmain
         Me.pgbar.BackColor = System.Drawing.Color.White
         Me.pgbar.Cursor = System.Windows.Forms.Cursors.Default
         Me.pgbar.ForeColor = System.Drawing.Color.White
-        Me.pgbar.Location = New System.Drawing.Point(251, 470)
+        Me.pgbar.Location = New System.Drawing.Point(251, 475)
         Me.pgbar.Name = "pgbar"
-        Me.pgbar.Size = New System.Drawing.Size(319, 25)
+        Me.pgbar.Size = New System.Drawing.Size(319, 23)
         Me.pgbar.TabIndex = 6
         '
         'lblprgs
         '
-        Me.lblprgs.BackColor = System.Drawing.Color.Black
+        Me.lblprgs.BackColor = System.Drawing.Color.Red
         Me.lblprgs.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.lblprgs.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.lblprgs.Font = New System.Drawing.Font("Calibri", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.lblprgs.ForeColor = System.Drawing.Color.White
-        Me.lblprgs.Location = New System.Drawing.Point(205, 433)
+        Me.lblprgs.Location = New System.Drawing.Point(205, 438)
         Me.lblprgs.Name = "lblprgs"
         Me.lblprgs.Size = New System.Drawing.Size(43, 31)
         Me.lblprgs.TabIndex = 7
@@ -136,7 +136,7 @@ Partial Class frmmain
         Me.btnreset.BackColor = System.Drawing.Color.Maroon
         Me.btnreset.Font = New System.Drawing.Font("Cambria", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.btnreset.ForeColor = System.Drawing.Color.White
-        Me.btnreset.Location = New System.Drawing.Point(332, 432)
+        Me.btnreset.Location = New System.Drawing.Point(333, 437)
         Me.btnreset.Name = "btnreset"
         Me.btnreset.Size = New System.Drawing.Size(80, 33)
         Me.btnreset.TabIndex = 9
@@ -148,7 +148,7 @@ Partial Class frmmain
         Me.btn.BackColor = System.Drawing.Color.Maroon
         Me.btn.Font = New System.Drawing.Font("Cambria", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.btn.ForeColor = System.Drawing.Color.White
-        Me.btn.Location = New System.Drawing.Point(247, 432)
+        Me.btn.Location = New System.Drawing.Point(248, 437)
         Me.btn.Name = "btn"
         Me.btn.Size = New System.Drawing.Size(80, 33)
         Me.btn.TabIndex = 12
@@ -157,35 +157,36 @@ Partial Class frmmain
         '
         'lbltype
         '
-        Me.lbltype.BackColor = System.Drawing.Color.Black
+        Me.lbltype.BackColor = System.Drawing.Color.Red
         Me.lbltype.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.lbltype.Font = New System.Drawing.Font("Calibri", 11.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.lbltype.ForeColor = System.Drawing.Color.White
-        Me.lbltype.Location = New System.Drawing.Point(4, 433)
+        Me.lbltype.Location = New System.Drawing.Point(4, 438)
         Me.lbltype.Name = "lbltype"
         Me.lbltype.Size = New System.Drawing.Size(203, 31)
         Me.lbltype.TabIndex = 13
-        Me.lbltype.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        Me.lbltype.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
         '
         'lblprocess
         '
-        Me.lblprocess.BackColor = System.Drawing.Color.Black
+        Me.lblprocess.BackColor = System.Drawing.Color.Red
         Me.lblprocess.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.lblprocess.Font = New System.Drawing.Font("Calibri", 11.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.lblprocess.ForeColor = System.Drawing.Color.White
-        Me.lblprocess.Location = New System.Drawing.Point(3, 465)
+        Me.lblprocess.Location = New System.Drawing.Point(3, 474)
         Me.lblprocess.Name = "lblprocess"
-        Me.lblprocess.Size = New System.Drawing.Size(240, 30)
+        Me.lblprocess.Size = New System.Drawing.Size(240, 24)
         Me.lblprocess.TabIndex = 14
-        Me.lblprocess.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        Me.lblprocess.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
         '
         'frmmain
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
+        Me.BackColor = System.Drawing.Color.Green
         Me.BackgroundImage = Global.Media.My.Resources.Resources.DSCN1281
         Me.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None
-        Me.ClientSize = New System.Drawing.Size(576, 496)
+        Me.ClientSize = New System.Drawing.Size(576, 512)
         Me.Controls.Add(Me.lblprocess)
         Me.Controls.Add(Me.lbltype)
         Me.Controls.Add(Me.btn)
@@ -199,8 +200,10 @@ Partial Class frmmain
         Me.Controls.Add(Me.lblsrc)
         Me.Controls.Add(Me.btnexit)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow
+        Me.HelpButton = True
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.Name = "frmmain"
+        Me.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide
         Me.Text = "              MEDIA MANAGER    "
         Me.TransparencyKey = System.Drawing.Color.FromArgb(CType(CType(224, Byte), Integer), CType(CType(224, Byte), Integer), CType(CType(224, Byte), Integer))
         Me.ResumeLayout(False)

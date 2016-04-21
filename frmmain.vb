@@ -29,10 +29,10 @@ Public Class frmmain
         Dim appversion As String = "R0.3.0.0.3 Build date"
         Dim buildtime As DateTime
         appversion = My.Application.Info.Version.ToString
-        appversion = "[ R" & appversion & " ]"
+        appversion = "R" & appversion
         pgbar.Minimum = 0
         buildtime = RetrieveLinkerTimestamp(Application.ExecutablePath)
-        appversion = appversion & "   Built " & Format(buildtime, "[ yyyyMMMdd hhmmss tt ]")
+        appversion = appversion & Format(buildtime, "        yyyyMMddhhmmss")
 
         Me.Text = Me.Text & appversion
         txtdst.Text = "C:\Manimoole\GirishBhatM"
@@ -215,6 +215,8 @@ Public Class frmmain
         pgbar.Value = 0
         lblprgs.Text = "0%"
         btnorg.Enabled = True
+        lbltype.Text = ""
+        lblprocess.Text = ""
     End Sub
 
     Private Sub btn_Click(sender As Object, e As EventArgs) Handles btn.Click
@@ -228,7 +230,7 @@ Public Class frmmain
         Dim idx = 0
         Dim outfilename As String
         pgbar.Minimum = 0
-        logmessage("Begining of Program")
+        logmessage("Process begin.")
         If sourcedir = "" Then
             MsgBox("Source Field is Empty!", vbCritical, "Empty Source String")
             logmessage(sourcedir & "Source Text Field is Empty!")
@@ -260,7 +262,7 @@ Public Class frmmain
         idx = 0
         If filecount <> 0 Then
             pgbar.Maximum = filecount
-            logmessage("Started Photos backup..")
+            logmessage("Photos backup begin")
             logmessage("Total Photos found: " & filecount)
             lblprocess.Text = "Progress: Photos Backup "
             For Each file As String In strphotos
@@ -273,8 +275,7 @@ Public Class frmmain
                 Application.DoEvents()
                 MyBase.Update()
             Next
-            lbltype.Text = "Done Photos backup"
-            logmessage("Completed Photos backup..")
+            logmessage("Photos backup end")
         End If
         '----------------------------------------------------------------------------------
         'backup video files.
@@ -282,7 +283,7 @@ Public Class frmmain
         idx = 0
         If filecount <> 0 Then
             pgbar.Maximum = filecount
-            logmessage("Started Videos backup..")
+            logmessage("Videos backup begin")
             lbltype.Text = "Backup Vodeos"
             logmessage("Total Videos found: " & filecount)
             lblprocess.Text = "Progress: Video Backup "
@@ -296,8 +297,7 @@ Public Class frmmain
                 Application.DoEvents()
                 MyBase.Update()
             Next
-            lbltype.Text = "Done Videos backup"
-            lbltype.Text = "Processing Vodeos done"
+            logmessage("Videos backup end.")
         End If
         '----------------------------------------------------------------------------------
         'arrange photos.
@@ -305,8 +305,8 @@ Public Class frmmain
         idx = 0
         If filecount <> 0 Then
             pgbar.Maximum = filecount
-            logmessage("Arrange Photos According to creation is started.")
-            lbltype.Text = "Arranging Photos"
+            logmessage("Photos arrangements begin.")
+            lbltype.Text = "Photos arrangements"
             lblprocess.Text = "Progress: Photos Arrangement "
             For Each file As String In strphotos
                 outfilename = filecreationtime2filename(destdir, file, "Photos")
@@ -323,8 +323,7 @@ Public Class frmmain
                 Application.DoEvents()
                 MyBase.Update()
             Next
-            lbltype.Text = "Arranging Photos Done"
-            logmessage("Arrange Photos According to creation is Completed.")
+            logmessage("Photos arrangements end.")
         End If
         '----------------------------------------------------------------------------------
         'arrange Videos.
@@ -332,8 +331,8 @@ Public Class frmmain
         idx = 0
         If filecount <> 0 Then
             pgbar.Maximum = filecount
-            logmessage("Arrange Videos According to creation is started.")
-            lbltype.Text = "Arranging Videos"
+            logmessage("Video arrangements begin.")
+            lbltype.Text = "Video arrangements"
             lblprocess.Text = "Progress: Video Arrangements "
             For Each file As String In strvideofiles
                 outfilename = filecreationtime2filename(destdir, file, "Videos")
@@ -350,13 +349,13 @@ Public Class frmmain
                 Application.DoEvents()
                 MyBase.Update()
             Next
-            logmessage("Arrange Videos According to creation is Completed.")
-            lbltype.Text = "Arranging Videos done"
+            logmessage("Video arrangements end.")
         End If
         '----------------------------------------------------------------------------------
-        lbltype.Text = "Completed"
+        lbltype.Text = "Process Completed"
         lblprocess.Text = "Progress: Completed. "
         pgbar.Value = 0
-        logmessage("Media files are arranged.")
+        pgbar.Minimum = 0
+        logmessage("Process end.")
     End Sub
 End Class
