@@ -26,13 +26,17 @@ Public Class frmmain
     End Sub
 
     Private Sub frmmain_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        Dim appversion As String
-        Dim dot As String = "."
-        appversion = "[ R " & My.Application.Info.Version.Major & dot & My.Application.Info.Version.Minor & dot & My.Application.Info.Version.Build & dot & My.Application.Info.Version.Revision & "]"
+        Dim appversion As String = "R0.3.0.0.3 Build date"
+        Dim buildtime As DateTime
+        appversion = My.Application.Info.Version.ToString
+        appversion = "[ R" & appversion & " ]"
         pgbar.Minimum = 0
+        buildtime = RetrieveLinkerTimestamp(Application.ExecutablePath)
+        appversion = appversion & "   Built " & Format(buildtime, "[ yyyyMMMdd hhmmss tt ]")
+
+        Me.Text = Me.Text & appversion
         txtdst.Text = "C:\Manimoole\GirishBhatM"
         logmessage("Media Application " & appversion & " Begin")
-        Me.Text = Me.Text & "       " & appversion
     End Sub
 
     Public Function FileExists(ByVal Fname As String) As Boolean
@@ -42,6 +46,25 @@ Public Class frmmain
             FileExists = False
         End If
     End Function
+    Function RetrieveLinkerTimestamp(ByVal filePath As String) As DateTime  
+        Const PeHeaderOffset As Integer = 60
+        Const LinkerTimestampOffset As Integer = 8
+        Dim b(2047) As Byte
+        Dim s As Stream
+        Try
+            s = New FileStream(filePath, FileMode.Open, FileAccess.Read)
+            s.Read(b, 0, 2048)
+        Finally
+            If Not s Is Nothing Then s.Close()
+        End Try
+        Dim i As Integer = BitConverter.ToInt32(b, PeHeaderOffset)
+        Dim SecondsSince1970 As Integer = BitConverter.ToInt32(b, i + LinkerTimestampOffset)
+        Dim dt As New DateTime(1970, 1, 1, 0, 0, 0)
+        dt = dt.AddSeconds(SecondsSince1970 + 30 * 60)
+        dt = dt.AddHours(TimeZone.CurrentTimeZone.GetUtcOffset(dt).Hours)
+        Return dt
+    End Function
+
 
     Public Function HandleDuplicates(ByVal srcfile As String, ByVal dstfile As String) As String
         Dim strfilename As String = dstfile
@@ -51,11 +74,11 @@ Public Class frmmain
         If FileExists(dstfile) = True Then
             If hashcomparefiles(srcfile, dstfile) = True Then
                 strfilename = String.Empty
-                logmessage("DUP:[ " & srcfile & " And " & dstfile & " ]")
+                logmessage("Skipping duplicate files:[ " & srcfile & " and " & dstfile & " ]")
             Else
                 strfilenamenoext = strfilenamenoext & "_" & Format(Now, "mmssff")
                 strfilename = My.Computer.FileSystem.CombinePath(strdstdir, strfilenamenoext & strext)
-                logmessage("DIF:[ " & srcfile & " And " & dstfile & " ]")
+                logmessage("Renaming different files:[ " & srcfile & " And " & dstfile & " ]")
             End If
         End If
         Return (strfilename)
@@ -182,7 +205,7 @@ Public Class frmmain
             My.Computer.FileSystem.CopyFile(sourcefile, bkupfile, overwrite:=False)
             logmessage("Backup: " & sourcefile)
         Else
-            logmessage("File Exists in Backup: " & sourcefile)
+            logmessage("Backup Skipping the duplicate files: " & sourcefile)
         End If
         Return (0)
     End Function
@@ -239,6 +262,7 @@ Public Class frmmain
             pgbar.Maximum = filecount
             logmessage("Started Photos backup..")
             logmessage("Total Photos found: " & filecount)
+            lblprocess.Text = "Progress: Photos Backup "
             For Each file As String In strphotos
                 backupmediafiles(destdir, "Photos", file)
                 idx = idx + 1
@@ -261,6 +285,7 @@ Public Class frmmain
             logmessage("Started Videos backup..")
             lbltype.Text = "Backup Vodeos"
             logmessage("Total Videos found: " & filecount)
+            lblprocess.Text = "Progress: Video Backup "
             For Each file As String In strvideofiles
                 backupmediafiles(destdir, "Videos", file)
                 idx = idx + 1
@@ -282,6 +307,7 @@ Public Class frmmain
             pgbar.Maximum = filecount
             logmessage("Arrange Photos According to creation is started.")
             lbltype.Text = "Arranging Photos"
+            lblprocess.Text = "Progress: Photos Arrangement "
             For Each file As String In strphotos
                 outfilename = filecreationtime2filename(destdir, file, "Photos")
                 outfilename = HandleDuplicates(file, outfilename)
@@ -308,6 +334,7 @@ Public Class frmmain
             pgbar.Maximum = filecount
             logmessage("Arrange Videos According to creation is started.")
             lbltype.Text = "Arranging Videos"
+            lblprocess.Text = "Progress: Video Arrangements "
             For Each file As String In strvideofiles
                 outfilename = filecreationtime2filename(destdir, file, "Videos")
                 outfilename = HandleDuplicates(file, outfilename)
@@ -328,6 +355,8 @@ Public Class frmmain
         End If
         '----------------------------------------------------------------------------------
         lbltype.Text = "Completed"
+        lblprocess.Text = "Progress: Completed. "
+        pgbar.Value = 0
         logmessage("Media files are arranged.")
     End Sub
 End Class
